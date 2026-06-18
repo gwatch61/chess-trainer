@@ -2,6 +2,57 @@
    Chess Training Program - Chess.com Inspired Theme
    ============================================ */
 
+/* --- Auth Modal --- */
+.auth-modal {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.75);
+  display: flex; align-items: center; justify-content: center;
+}
+.auth-modal.hidden { display: none; }
+.auth-box {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 32px 28px;
+  width: 320px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.auth-title { text-align: center; font-size: 1.3rem; color: var(--text-primary); margin: 0 0 4px; }
+.auth-tabs { display: flex; gap: 8px; }
+.auth-tab {
+  flex: 1; padding: 7px; border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem;
+}
+.auth-tab.active { background: var(--accent-green); color: #fff; border-color: var(--accent-green); }
+.auth-input {
+  padding: 9px 12px; border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-input); color: var(--text-primary); font-size: 0.95rem;
+}
+.auth-submit { margin-top: 4px; }
+.auth-error {
+  background: rgba(224,85,85,0.15); border: 1px solid var(--accent-red);
+  color: var(--accent-red); border-radius: 6px; padding: 8px 10px; font-size: 0.85rem;
+}
+.auth-error.hidden { display: none; }
+.auth-guest { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin: 0; }
+.auth-guest a { color: var(--text-secondary); }
+
+/* --- User bar --- */
+.user-bar {
+  position: fixed; top: 10px; right: 14px; z-index: 500;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: 20px; padding: 5px 14px; font-size: 0.82rem; color: var(--text-secondary);
+}
+.user-bar.hidden { display: none; }
+.auth-signout-btn {
+  background: transparent; border: none; color: var(--accent-red);
+  cursor: pointer; font-size: 0.82rem; padding: 0;
+}
+.auth-signout-btn:hover { text-decoration: underline; }
+
 :root {
   color-scheme: dark;
   --bg-dark: #262421;

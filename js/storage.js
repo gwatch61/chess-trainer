@@ -9,6 +9,8 @@ CT.Storage = (function() {
 
   var OPENING_KEY = 'chess_trainer_openings_v1';
 
+  // --- Local helpers ---
+
   function sanitize(str) {
     return String(str).replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
   }
@@ -17,23 +19,60 @@ CT.Storage = (function() {
     return sanitize(name) + '__' + color;
   }
 
-  function load() {
+  function loadLocal() {
     try { return JSON.parse(localStorage.getItem(OPENING_KEY) || '{}'); }
     catch (e) { return {}; }
   }
 
-  function persist(data) {
+  function persistLocal(data) {
     try { localStorage.setItem(OPENING_KEY, JSON.stringify(data)); }
     catch (e) {}
   }
 
+  // --- Supabase sync ---
+
+  async function syncFromSupabase() {
+    if (!CT.currentUser) return;
+    var res = await window.sb
+      .from('user_progress')
+      .select('*')
+      .eq('user_id', CT.currentUser.id);
+    if (res.error || !res.data) return;
+
+    var merged = loadLocal();
+    res.data.forEach(function(row) {
+      merged[row.opening_key] = {
+        attempts: row.attempts,
+        correct: row.correct,
+        total: row.total,
+        lastPracticed: row.last_practiced
+      };
+    });
+    persistLocal(merged);
+  }
+
+  async function upsertToSupabase(openingKey, stats) {
+    if (!CT.currentUser) return;
+    await window.sb.from('user_progress').upsert({
+      user_id: CT.currentUser.id,
+      opening_key: openingKey,
+      attempts: stats.attempts,
+      correct: stats.correct,
+      total: stats.total,
+      last_practiced: stats.lastPracticed,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id,opening_key' });
+  }
+
+  // --- Public API ---
+
   function getStats(name, color) {
-    return load()[keyFor(name, color)] || null;
+    return loadLocal()[keyFor(name, color)] || null;
   }
 
   function recordSession(name, color, correct, total) {
     if (total === 0) return null;
-    var all = load();
+    var all = loadLocal();
     var k = keyFor(name, color);
     var s = all[k] || { attempts: 0, correct: 0, total: 0 };
     s.attempts++;
@@ -41,7 +80,8 @@ CT.Storage = (function() {
     s.total += total;
     s.lastPracticed = new Date().toISOString().slice(0, 10);
     all[k] = s;
-    persist(all);
+    persistLocal(all);
+    upsertToSupabase(k, s);
     return s;
   }
 
@@ -64,7 +104,7 @@ CT.Storage = (function() {
   }
 
   function getAllStats() {
-    return load();
+    return loadLocal();
   }
 
   return {
@@ -73,6 +113,7 @@ CT.Storage = (function() {
     recordSession: recordSession,
     masteryLevel: masteryLevel,
     masteryLabel: masteryLabel,
-    getAllStats: getAllStats
+    getAllStats: getAllStats,
+    syncFromSupabase: syncFromSupabase
   };
 })();
