@@ -1,0 +1,6 @@
+.claude/
+ChessTrainingProgram.zip
+*.zip
+*.bat
+Create-EmailPackage.ps1
+server.ps1
