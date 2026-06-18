@@ -43,10 +43,9 @@
 
 /* --- User bar --- */
 .user-bar {
-  position: fixed; top: 10px; right: 14px; z-index: 500;
   display: flex; align-items: center; gap: 10px;
-  background: var(--bg-panel); border: 1px solid var(--border);
-  border-radius: 20px; padding: 5px 14px; font-size: 0.82rem; color: var(--text-secondary);
+  margin-left: auto;
+  font-size: 0.82rem; color: var(--text-secondary);
 }
 .user-bar.hidden { display: none; }
 .auth-signout-btn {

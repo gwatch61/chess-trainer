@@ -21,6 +21,10 @@
       <button class="mode-tab" data-mode="endgames">Endgames</button>
       <button class="mode-tab" data-mode="spar">Free Spar</button>
     </nav>
+    <div id="user-bar" class="user-bar hidden">
+      <span id="user-email-display"></span>
+      <button id="btn-signout" class="auth-signout-btn">Sign Out</button>
+    </div>
   </header>
 
   <main class="app-layout">
@@ -229,12 +233,6 @@
       <p class="auth-resend hidden"><a href="#" id="auth-resend-link">Resend confirmation email</a></p>
       <p class="auth-guest"><a href="#" id="auth-guest-link">Continue as guest</a></p>
     </div>
-  </div>
-
-  <!-- User bar -->
-  <div id="user-bar" class="user-bar hidden">
-    <span id="user-email-display"></span>
-    <button id="btn-signout" class="auth-signout-btn">Sign Out</button>
   </div>
 
   <!-- Scripts -->
