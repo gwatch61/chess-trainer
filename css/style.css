@@ -36,6 +36,8 @@
   color: var(--accent-red); border-radius: 6px; padding: 8px 10px; font-size: 0.85rem;
 }
 .auth-error.hidden { display: none; }
+.auth-resend { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin: 0; }
+.auth-resend a { color: var(--accent-gold); }
 .auth-guest { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin: 0; }
 .auth-guest a { color: var(--text-secondary); }
 

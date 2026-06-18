@@ -84,15 +84,37 @@ CT.currentUser = null;
       var res;
       if (activeTab === 'login') {
         res = await window.sb.auth.signInWithPassword({ email: email, password: password });
+        if (res.error) {
+          setError(res.error.message);
+          var isUnconfirmed = res.error.message.toLowerCase().includes('confirm') ||
+                              res.error.message.toLowerCase().includes('not confirmed');
+          document.querySelector('.auth-resend').classList.toggle('hidden', !isUnconfirmed);
+          return;
+        }
       } else {
         res = await window.sb.auth.signUp({ email: email, password: password });
         if (!res.error && res.data.user && !res.data.session) {
           setError('Check your email to confirm your account, then sign in.');
           return;
         }
+        if (res.error) { setError(res.error.message); return; }
       }
+      setError('');
+      document.querySelector('.auth-resend').classList.add('hidden');
+    });
+
+    // Resend confirmation
+    document.getElementById('auth-resend-link').addEventListener('click', async function (e) {
+      e.preventDefault();
+      var email = document.getElementById('auth-email').value.trim();
+      if (!email) { setError('Enter your email above first.'); return; }
+      var res = await window.sb.auth.resend({ type: 'signup', email: email });
       if (res.error) { setError(res.error.message); return; }
       setError('');
+      document.querySelector('.auth-resend').classList.add('hidden');
+      document.getElementById('auth-error').classList.remove('hidden');
+      document.getElementById('auth-error').style.color = 'var(--accent-green)';
+      document.getElementById('auth-error').textContent = 'Confirmation email resent — check your inbox.';
     });
 
     // Guest mode
