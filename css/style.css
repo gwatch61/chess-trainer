@@ -116,6 +116,9 @@ body {
 .mode-tabs {
   display: flex;
   gap: 4px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .mode-tab {
